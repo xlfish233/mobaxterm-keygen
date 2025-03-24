@@ -125,3 +125,68 @@ fn main() -> Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Read;
+
+    #[test]
+    fn test_generate_license() {
+        // 测试基本许可证生成
+        let license_content = generate_license("test", "10.9", 1).unwrap();
+        assert!(!license_content.is_empty());
+
+        // 测试ZIP文件生成
+        let tmp_file = tempfile::NamedTempFile::new().unwrap();
+        let tmp_file_path = tmp_file.path().to_str().unwrap();
+
+        create_zip_file(&license_content, tmp_file_path).unwrap();
+
+        // 验证文件存在和大小
+        let metadata = std::fs::metadata(tmp_file_path).unwrap();
+        assert!(metadata.len() > 0);
+
+        // 验证ZIP文件结构
+        let file = std::fs::File::open(tmp_file_path).unwrap();
+        let mut archive = zip::ZipArchive::new(file).unwrap();
+
+        // 确保只有一个文件
+        assert_eq!(archive.len(), 1);
+
+        // 验证文件名是否正确
+        let mut zip_file = archive.by_index(0).unwrap();
+        assert_eq!(zip_file.name(), "Pro.key");
+
+        // 验证文件内容
+        let mut contents = String::new();
+        zip_file.read_to_string(&mut contents).unwrap();
+        assert_eq!(contents, license_content);
+    }
+
+    #[test]
+    fn test_generate_license_with_different_params() {
+        // 测试不同用户名
+        let license1 = generate_license("user1", "10.9", 1).unwrap();
+        let license2 = generate_license("user2", "10.9", 1).unwrap();
+        assert_ne!(license1, license2);
+
+        // 测试不同版本号
+        let license3 = generate_license("test", "10.9", 1).unwrap();
+        let license4 = generate_license("test", "11.0", 1).unwrap();
+        assert_ne!(license3, license4);
+
+        // 测试不同数量
+        let license5 = generate_license("test", "10.9", 1).unwrap();
+        let license6 = generate_license("test", "10.9", 2).unwrap();
+        assert_ne!(license5, license6);
+    }
+
+    #[test]
+    fn test_invalid_version_format() {
+        // 测试无效的版本号格式
+        assert!(generate_license("test", "10", 1).is_err());
+        assert!(generate_license("test", "10.9.1", 1).is_err());
+        assert!(generate_license("test", "invalid", 1).is_err());
+    }
+}

@@ -11,6 +11,9 @@ base64 = "0.22.1"
 zip = "2.5.0"
 anyhow = "1.0"
 
+[dev-dependencies]
+tempfile = "3.10.1"
+
 # make release file min size
 
 [profile.release]
