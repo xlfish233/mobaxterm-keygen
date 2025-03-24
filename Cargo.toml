@@ -1,0 +1,21 @@
+[package]
+name = "mobaxterm-keygen"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name"]
+description = "MobaXterm License Generator CLI Tool"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+base64 = "0.22.1"
+zip = "2.5.0"
+anyhow = "1.0"
+
+# make release file min size
+
+[profile.release]
+lto = true
+strip = true
+panic = "abort"
+
+
