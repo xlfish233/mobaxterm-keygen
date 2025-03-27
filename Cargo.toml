@@ -2,7 +2,7 @@
 name = "mobaxterm-keygen"
 version = "0.1.0"
 edition = "2021"
-authors = ["Your Name"]
+authors = ["xlfish233"]
 description = "MobaXterm License Generator CLI Tool"
 
 [dependencies]
