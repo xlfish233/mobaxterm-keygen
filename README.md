@@ -57,4 +57,6 @@ cargo build --release
 
 ## 许可证
 
-本项目采用 MIT 许可证。 
+<p>脚本原作者: Double Sine | 许可证: GPLv3</p>
+
+本项目采用 GPLv3 许可证。
